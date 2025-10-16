@@ -42,7 +42,11 @@
       project_directory=""
       project_type="Executable" />
     <folder Name="Application">
-      <file file_name="../../../main.c" />
+      <file file_name="../../../main.c">
+        <configuration
+          Name="Debug"
+          c_preprocessor_definitions="CONFIG_NFCT_PINS_AS_GPIOS" />
+      </file>
       <file file_name="../../../meas.c" />
       <file file_name="../config/sdk_config.h" />
     </folder>

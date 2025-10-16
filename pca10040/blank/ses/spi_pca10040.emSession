@@ -60,8 +60,8 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="216" useTextEdit="1" folds0="375" path="../../../main.c" left="0" top="197" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="31" y="42" useTextEdit="1" path="../config/sdk_config.h" left="0" selected="1" top="23" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="4" y="236" useTextEdit="1" folds0="379" path="../../../main.c" left="0" top="216" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="31" y="42" useTextEdit="1" path="../config/sdk_config.h" left="0" selected="1" top="24" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="76" y="289" useTextEdit="1" path="../../../../../../modules/nrfx/drivers/src/nrfx_saadc.c" left="0" top="289" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="225" useTextEdit="1" path="../../../../../../integration/nrfx/legacy/nrf_drv_spi.h" left="0" top="186" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="490" useTextEdit="1" path="../../../../../../modules/nrfx/hal/nrf_gpio.h" left="0" top="471" codecName="Default"/>

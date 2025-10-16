@@ -232,6 +232,10 @@ int main(void)
     NRF_LOG_INFO("SPI Initialized.");
 
     // --- GPIO Configuration ---
+
+    // Disable NFC Pin protection for P0.10 -> Allow for GPIO
+    
+
     // MUX control pins
     nrf_gpio_cfg_output(A0);
     nrf_gpio_cfg_output(A1);
