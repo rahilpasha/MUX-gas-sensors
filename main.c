@@ -73,7 +73,7 @@
 #define ADC_RDY_PIN 28    // AD7789 Data Ready pin (/RDY)
 
 // SPI bus pins
-#define MOSI_PIN 11
+#define MOSI_PIN 0
 #define MISO_PIN 28
 #define SCK_PIN 7
 
@@ -82,8 +82,9 @@ static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);
 static volatile bool spi_xfer_done;
 
 // DAC Data Buffer (Example: 0.5V vout)
-static uint8_t m_tx_buf_dac[] = {0b00000000, 0b00011001, 0b10011010};
-static const uint8_t m_length_dac = sizeof(m_tx_buf_dac);
+static uint8_t m_tx_dac_use_internal_ref[] = {0b00111000, 0b00000000, 0b00000001};
+static uint8_t m_tx_dac_set_500mV[] = {0b00011000, 0b00010011, 0b01100101};
+static const uint8_t m_length_dac = 3;
 
 /**
  * @brief SPI user event handler.
@@ -134,18 +135,18 @@ uint32_t ad7789_read_single()
 
     nrf_gpio_pin_clear(ADC_CS_PIN); // Pull CS low
     nrf_delay_us(10); // Small delay
-    
-    spi_xfer_done = false;
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, read_cmd, 1, NULL, 0));
-    while (!spi_xfer_done) { __WFE(); }
-
-    nrf_delay_us(10); // Small delay
 
     // The AD7789 pulls the /RDY pin low when a conversion is complete.
     while (nrf_gpio_pin_read(ADC_RDY_PIN) == 1)
     {
         // Wait for /RDY to go low
     }
+    
+    spi_xfer_done = false;
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, read_cmd, 1, NULL, 0));
+    while (!spi_xfer_done) { __WFE(); }
+
+    nrf_delay_us(10); // Small delay
     
     spi_xfer_done = false;
     APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, dummy_tx, 3, adc_output, 3));
@@ -174,7 +175,7 @@ double ad7789_convert_voltage(uint32_t adc_value) {
 // DAC functions
 //================================================================================
 
-void set_dac_output(uint8_t *p_tx_data, uint8_t length) {
+void send_DAC_msg(uint8_t *p_tx_data, uint8_t length) {
     nrf_gpio_pin_clear(DAC_CS_PIN); // Select DAC
     
     spi_xfer_done = false;
@@ -258,7 +259,8 @@ int main(void)
     NRF_LOG_INFO("SAADC Initialized.");
     
     // Set initial DAC output
-    set_dac_output(m_tx_buf_dac, m_length_dac);
+    send_DAC_msg(m_tx_dac_use_internal_ref, m_length_dac);
+    send_DAC_msg(m_tx_dac_set_500mV, m_length_dac);
     NRF_LOG_INFO("DAC output set.");
 
     // Set SPI Mode to 3
@@ -277,7 +279,7 @@ int main(void)
         bsp_board_led_invert(BSP_BOARD_LED_0);
       
         // --- MUX Logic ---
-        // This logic correctly increments a 4-bit binary number (0000 to 1111)
+        // This logic increments a 4-bit binary number (0000 to 1111)
         #if DEBUG_MUX == 0
         int carry = 1;
         for (int i = 3; i >= 0; i--) {
@@ -309,10 +311,10 @@ int main(void)
 
         // Read from external AD7789
         uint32_t ad7789_val = ad7789_read_single();
-        //NRF_LOG_INFO("External AD7789 value: %d (0x%X)", ad7789_val, ad7789_val);
+        NRF_LOG_INFO("External AD7789 value: %d (0x%X)", ad7789_val, ad7789_val);
 
         double adc_voltage = ad7789_convert_voltage(ad7789_val);
-        NRF_LOG_INFO("External AD7789 voltage: %lf test", adc_voltage);
+        //NRF_LOG_INFO("External AD7789 voltage: %lf test", adc_voltage);
 
 
         // CSV Output

@@ -60,11 +60,12 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="4" y="236" useTextEdit="1" folds0="379" path="../../../main.c" left="0" top="216" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="31" y="42" useTextEdit="1" path="../config/sdk_config.h" left="0" selected="1" top="24" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="19" y="75" useTextEdit="1" folds0="381" path="../../../main.c" left="0" selected="1" top="56" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="31" y="42" useTextEdit="1" path="../config/sdk_config.h" left="0" top="24" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="76" y="289" useTextEdit="1" path="../../../../../../modules/nrfx/drivers/src/nrfx_saadc.c" left="0" top="289" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="225" useTextEdit="1" path="../../../../../../integration/nrfx/legacy/nrf_drv_spi.h" left="0" top="186" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="490" useTextEdit="1" path="../../../../../../modules/nrfx/hal/nrf_gpio.h" left="0" top="471" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="691" useTextEdit="1" path="../../../../../../modules/nrfx/hal/nrf_gpio.h" left="0" top="673" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="136" useTextEdit="1" path="../../../../../../modules/nrfx/soc/nrfx_coredep.h" left="0" top="117" codecName="Default"/>
  </Files>
- <EMStudioWindow activeProject="spi_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/Users/yogakanneboina/Downloads/combined_nRF5_SDK_17.0.2_d674dde/examples/peripheral/spi" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <EMStudioWindow activeProject="spi_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/Users/yogakanneboina/Downloads/combined_nRF5_SDK_17.0.2_d674dde/examples/peripheral/spi" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>
