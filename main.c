@@ -59,18 +59,15 @@
 
 // PIN Definitions
 // MUX Control Pins
-#define A0 18
+#define A0 20
 #define A1 3
 #define A2 10
 #define A3 5
 #define EN 8
 
-#define DEBUG_MUX 0
-
 // SPI Peripherals Chip Select (/CS) Pins
 #define DAC_CS_PIN 6      // Chip select for DAC
 #define ADC_CS_PIN 4      // Chip select for AD7789
-#define ADC_RDY_PIN 28    // AD7789 Data Ready pin (/RDY)
 
 // SPI bus pins
 #define MOSI_PIN 0
@@ -81,7 +78,7 @@
 static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);
 static volatile bool spi_xfer_done;
 
-// DAC Data Buffer (Example: 0.5V vout)
+// DAC Data Buffer
 static uint8_t m_tx_dac_use_internal_ref[] = {0b00111000, 0b00000000, 0b00000001};
 static uint8_t m_tx_dac_set_500mV[] = {0b00011000, 0b00010011, 0b01100101};
 static const uint8_t m_length_dac = 3;
@@ -101,108 +98,206 @@ void spi_event_handler(nrf_drv_spi_evt_t const * p_event,
 
 /**
  * @brief Resets the AD7789 by writing at least 32 high bits.
- * This ensures the ADC is in a known default state.
  */
 void ad7789_reset()
 {
-    uint8_t reset_cmd[4] = {0xFF, 0xFF, 0xFF, 0xFF};
+    uint8_t reset_cmd[5] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     
-    nrf_gpio_pin_clear(ADC_CS_PIN); // Pull CS low
-    nrf_delay_us(10); // Small delay
+    nrf_gpio_pin_clear(ADC_CS_PIN);
+    nrf_delay_us(1);
     
     spi_xfer_done = false;
     APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, reset_cmd, sizeof(reset_cmd), NULL, 0));
     while (!spi_xfer_done) { __WFE(); }
 
-    nrf_delay_us(10); // Small delay
-    nrf_gpio_pin_set(ADC_CS_PIN);   // Pull CS high
-    nrf_delay_ms(1); // Wait for reset to complete
+    nrf_gpio_pin_set(ADC_CS_PIN);
+    nrf_delay_ms(10);
     NRF_LOG_INFO("AD7789 Reset.");
 }
 
+/**
+ * @brief Read the status register
+ */
+uint8_t ad7789_read_status()
+{
+    uint8_t tx_data[2] = {0x08, 0x00}; // Read status register
+    uint8_t rx_data[2] = {0};
+    
+    nrf_gpio_pin_clear(ADC_CS_PIN);
+    nrf_delay_us(1);
+    
+    spi_xfer_done = false;
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, tx_data, 2, rx_data, 2));
+    while (!spi_xfer_done) { __WFE(); }
+    
+    nrf_gpio_pin_set(ADC_CS_PIN);
+    nrf_delay_us(10);
+    
+    return rx_data[1];
+}
 
 /**
- * @brief Reads a single 24-bit value from the AD7789.
- *
- * @return The 24-bit ADC conversion result.
+ * @brief Read mode register
  */
-uint32_t ad7789_read_single()
+uint8_t ad7789_read_mode()
 {
-    uint8_t read_cmd[1] = {0x38};
+    uint8_t tx_data[2] = {0x18, 0x00}; // Read mode register
+    uint8_t rx_data[2] = {0};
     
-    uint8_t adc_output[3] = {0};
-    uint8_t dummy_tx[3]   = {0};
+    nrf_gpio_pin_clear(ADC_CS_PIN);
+    nrf_delay_us(1);
+    
+    spi_xfer_done = false;
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, tx_data, 2, rx_data, 2));
+    while (!spi_xfer_done) { __WFE(); }
+    
+    nrf_gpio_pin_set(ADC_CS_PIN);
+    nrf_delay_us(10);
+    
+    return rx_data[1];
+}
 
-    nrf_gpio_pin_clear(ADC_CS_PIN); // Pull CS low
-    nrf_delay_us(10); // Small delay
+/**
+ * @brief Wait for data ready by polling status register
+ */
+bool ad7789_wait_for_data(uint32_t timeout_ms)
+{
+    uint32_t elapsed = 0;
+    uint8_t status;
+    
+    do {
+        status = ad7789_read_status();
+        
+        // Check if RDY bit (bit 7) is cleared
+        if ((status & 0x80) == 0) {
+            // Data is ready
+            if (status & 0x40) {
+                NRF_LOG_WARNING("Data ready but ERR flag set! Status: 0x%02X", status);
+            }
+            return true;
+        }
+        
+        nrf_delay_ms(10);
+        elapsed += 10;
+        
+        if (elapsed >= timeout_ms) {
+            NRF_LOG_WARNING("Timeout waiting for data. Status: 0x%02X", status);
+            return false;
+        }
+    } while (1);
+}
 
-    // The AD7789 pulls the /RDY pin low when a conversion is complete.
-    while (nrf_gpio_pin_read(ADC_RDY_PIN) == 1)
-    {
-        // Wait for /RDY to go low
+/**
+ * @brief Select and configure a channel
+ */
+void ad7789_select_channel(uint8_t channel)
+{
+    // Channel bits go in communications register when writing to mode register
+    // 00 = AIN(+) - AIN(-)
+    // 10 = AIN(-) - AIN(-) (internal short)
+    // 11 = VDD monitor
+    
+    uint8_t comm_reg = 0x10 | (channel & 0x03); // Write to mode reg + channel select
+    uint8_t mode_reg = 0x02; // Continuous conversion, bipolar
+    
+    nrf_gpio_pin_clear(ADC_CS_PIN);
+    nrf_delay_us(1);
+    
+    spi_xfer_done = false;
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, &comm_reg, 1, NULL, 0));
+    while (!spi_xfer_done) { __WFE(); }
+    
+    spi_xfer_done = false;
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, &mode_reg, 1, NULL, 0));
+    while (!spi_xfer_done) { __WFE(); }
+    
+    nrf_gpio_pin_set(ADC_CS_PIN);
+    nrf_delay_ms(150); // Wait for first conversion
+    
+    NRF_LOG_INFO("Selected channel 0x%02X", channel);
+}
+
+/**
+ * @brief Read 24-bit data from data register
+ */
+uint32_t ad7789_read_data()
+{
+    // Wait for data to be ready
+    if (!ad7789_wait_for_data(200)) {
+        NRF_LOG_ERROR("No data ready!");
+        return 0xFFFFFFFF;
     }
     
-    spi_xfer_done = false;
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, read_cmd, 1, NULL, 0));
-    while (!spi_xfer_done) { __WFE(); }
-
-    nrf_delay_us(10); // Small delay
+    // Read data register in one transaction
+    uint8_t tx_data[4] = {0x38, 0x00, 0x00, 0x00}; // Read data register
+    uint8_t rx_data[4] = {0};
+    
+    nrf_gpio_pin_clear(ADC_CS_PIN);
+    nrf_delay_us(1);
     
     spi_xfer_done = false;
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, dummy_tx, 3, adc_output, 3));
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, tx_data, 4, rx_data, 4));
     while (!spi_xfer_done) { __WFE(); }
-
-    nrf_gpio_pin_set(ADC_CS_PIN); // Deselect ADC
-
-    // Combine the 3 bytes into a single 24-bit value
-    uint32_t adc_value = (adc_output[0] << 16) | (adc_output[1] << 8) | (adc_output[2]);
+    
+    nrf_gpio_pin_set(ADC_CS_PIN);
+    nrf_delay_us(10);
+    
+    // Combine bytes
+    uint32_t adc_value = ((uint32_t)rx_data[1] << 16) | 
+                         ((uint32_t)rx_data[2] << 8) | 
+                         rx_data[3];
+    
     return adc_value;
 }
 
 /**
- * @brief Reads a single 24-bit value from the AD7789.
- *
- * @return The 24-bit ADC conversion result.
+ * @brief Configure for continuous conversion on analog input
  */
-double ad7789_convert_voltage(uint32_t adc_value) {
+void ad7789_configure_analog_input()
+{
+    NRF_LOG_INFO("Configuring AD7789 for analog input channel...");
+    ad7789_select_channel(0x00); // AIN(+) - AIN(-)
+    
+    uint8_t mode = ad7789_read_mode();
+    NRF_LOG_INFO("Mode register: 0x%02X", mode);
+    
+    uint8_t status = ad7789_read_status();
+    NRF_LOG_INFO("Status register: 0x%02X", status);
+}
 
-    double offset = adc_value / pow(2, 23);
-    return (offset - 1) * 2.9;
-
+/**
+ * @brief Convert ADC value to voltage
+ */
+double ad7789_convert_voltage(uint32_t adc_value) 
+{
+    // Bipolar mode: Code = 2^23 × ((VIN / VREF) + 1)
+    // Therefore: VIN = ((Code / 2^23) - 1) × VREF
+    double normalized = (double)adc_value / 8388608.0; // 2^23
+    return (normalized - 1.0) * 2.719; // VREF ≈ 2.719V
 }
 
 //================================================================================
 // DAC functions
 //================================================================================
 
-void send_DAC_msg(uint8_t *p_tx_data, uint8_t length) {
-    nrf_gpio_pin_clear(DAC_CS_PIN); // Select DAC
+void send_DAC_msg(uint8_t *p_tx_data, uint8_t length) 
+{
+    nrf_gpio_pin_clear(DAC_CS_PIN);
     
     spi_xfer_done = false;
     APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, p_tx_data, length, NULL, 0));
     while (!spi_xfer_done) { __WFE(); }
 
-    nrf_gpio_pin_set(DAC_CS_PIN); // Deselect DAC
+    nrf_gpio_pin_set(DAC_CS_PIN);
 }
+
 
 //================================================================================
-// SAADC (Internal ADC) Functions
+// Bluetooth functions
 //================================================================================
-void saadc_callback_handler(nrf_drv_saadc_evt_t const * p_event)
-{
-  // This callback is required by the driver but can be empty for simple blocking samples.
-}
 
-void saadc_init(void)
-{
-    ret_code_t err_code;
-    err_code = nrf_drv_saadc_init(NULL, saadc_callback_handler);
-    APP_ERROR_CHECK(err_code);
 
-    nrf_saadc_channel_config_t channel_config = NRFX_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN0);
-    err_code = nrf_drv_saadc_channel_init(0, &channel_config);
-    APP_ERROR_CHECK(err_code);
-}
+
 
 //================================================================================
 // Main Application
@@ -223,71 +318,68 @@ int main(void)
     // --- SPI Configuration ---
     nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG;
     spi_config.mosi_pin = MOSI_PIN;
-    spi_config.miso_pin = MISO_PIN; // ADDED: MISO pin is required for reading data
+    spi_config.miso_pin = MISO_PIN;
     spi_config.sck_pin  = SCK_PIN;
-    spi_config.ss_pin   = NRF_DRV_SPI_PIN_NOT_USED; // We manage CS pins manually
+    spi_config.ss_pin   = NRF_DRV_SPI_PIN_NOT_USED;
     spi_config.frequency = NRF_SPI_FREQ_250K;
     spi_config.mode = NRF_DRV_SPI_MODE_2;
     spi_config.bit_order = NRF_DRV_SPI_BIT_ORDER_MSB_FIRST;
     APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, spi_event_handler, NULL));
-    NRF_LOG_INFO("SPI Initialized.");
+    NRF_LOG_INFO("SPI Initialized (Mode 2 for DAC).");
 
     // --- GPIO Configuration ---
-
-    // Disable NFC Pin protection for P0.10 -> Allow for GPIO
-    
-
-    // MUX control pins
     nrf_gpio_cfg_output(A0);
     nrf_gpio_cfg_output(A1);
     nrf_gpio_cfg_output(A2);
     nrf_gpio_cfg_output(A3);
     nrf_gpio_cfg_output(EN);
     
-    // SPI Chip Select pins
     nrf_gpio_cfg_output(ADC_CS_PIN);
     nrf_gpio_cfg_output(DAC_CS_PIN);
-    nrf_gpio_pin_set(ADC_CS_PIN); // Deselect ADC
-    nrf_gpio_pin_set(DAC_CS_PIN); // Deselect DAC
-
-    // ADC Ready pin
-    nrf_gpio_cfg_input(ADC_RDY_PIN, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_pin_set(ADC_CS_PIN);
+    nrf_gpio_pin_set(DAC_CS_PIN);
     NRF_LOG_INFO("GPIO Initialized.");
 
-    // --- Peripheral Initialization ---
-    saadc_init();
-    NRF_LOG_INFO("SAADC Initialized.");
-    
     // Set initial DAC output
     send_DAC_msg(m_tx_dac_use_internal_ref, m_length_dac);
     send_DAC_msg(m_tx_dac_set_500mV, m_length_dac);
-    NRF_LOG_INFO("DAC output set.");
 
-    // Set SPI Mode to 3
+    NRF_LOG_INFO("DAC output set to 0.5V");
+
+    // Switch to SPI Mode 3 for AD7789
     nrf_drv_spi_uninit(&spi);
     spi_config.mode = NRF_DRV_SPI_MODE_3;
     APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, spi_event_handler, NULL));
-    NRF_LOG_INFO("SPI Mode 3 Initialized.");
+    nrf_gpio_pin_set(ADC_CS_PIN);
+    nrf_gpio_pin_set(DAC_CS_PIN);
+    NRF_LOG_INFO("SPI Mode 3 Initialized (for AD7789).");
 
-    // Reset external ADC
+    // Initialize AD7789
     ad7789_reset();
-
+    
+    uint8_t status = ad7789_read_status();
+    NRF_LOG_INFO("Initial status: 0x%02X (should be 0x8C for AD7789)", status);
+    
+    // Configure for normal operation on analog input channel
+    ad7789_configure_analog_input();
+    
+    NRF_LOG_INFO("\n=== Starting Main Loop ===\n");
+    
     bool beta[] = {false, false, false, false};
 
     while (1)
     {
         bsp_board_led_invert(BSP_BOARD_LED_0);
       
-        // --- MUX Logic ---
-        // This logic increments a 4-bit binary number (0000 to 1111)
-        #if DEBUG_MUX == 0
+#ifndef MUX_DISABLE
+        // Increment MUX channel
         int carry = 1;
         for (int i = 3; i >= 0; i--) {
             int sum = beta[i] + carry;
             beta[i] = sum % 2;
             carry = sum / 2;
         }
-        #endif
+
         nrf_gpio_pin_write(A3, beta[0]);
         nrf_gpio_pin_write(A2, beta[1]);
         nrf_gpio_pin_write(A1, beta[2]);
@@ -299,28 +391,36 @@ int main(void)
             beta_str[i] = beta[i] ? '1' : '0';
         }
         beta_str[4] = '\0';
-        //NRF_LOG_INFO("MUX set to: %s", (uint32_t)beta_str);
+#endif
         
-        nrf_delay_ms(500); // Delay for MUX to settle
+        // Longer delay for MUX to settle and input to stabilize
+        nrf_delay_ms(500);
 
-        // --- Measurement ---
-        // Read from internal SAADC
-        //nrf_saadc_value_t saadc_val;
-        //nrf_drv_saadc_sample_convert(0, &saadc_val);
-        //NRF_LOG_INFO("Internal SAADC value: %d", saadc_val);
-
-        // Read from external AD7789
-        uint32_t ad7789_val = ad7789_read_single();
-        NRF_LOG_INFO("External AD7789 value: %d (0x%X)", ad7789_val, ad7789_val);
-
-        double adc_voltage = ad7789_convert_voltage(ad7789_val);
-        //NRF_LOG_INFO("External AD7789 voltage: %lf test", adc_voltage);
-
-
-        // CSV Output
-        NRF_LOG_INFO("%s, %lu", (uint32_t)beta_str, ad7789_val)
+        // Read from AD7789
+        uint32_t ad7789_val = ad7789_read_data();
+        uint8_t final_status = ad7789_read_status();
+        
+        if (final_status & 0x40) {
+            // Error flag set
+#ifndef MUX_DISABLE
+            NRF_LOG_WARNING("%s, ERROR: %lu (0x%06X)", 
+                          (uint32_t)beta_str, ad7789_val, ad7789_val);
+#else
+            NRF_LOG_WARNING("ERROR: %lu (0x%06X)", ad7789_val, ad7789_val);
+#endif
+        } else {
+            // Valid reading
+            double voltage = ad7789_convert_voltage(ad7789_val);
+#ifndef MUX_DISABLE
+            NRF_LOG_INFO("%s, %lu (0x%06X), " NRF_LOG_FLOAT_MARKER " V", 
+                        (uint32_t)beta_str, ad7789_val, ad7789_val, 
+                        NRF_LOG_FLOAT(voltage));
+#else
+            NRF_LOG_INFO("%lu (0x%06X), " NRF_LOG_FLOAT_MARKER " V", 
+                        ad7789_val, ad7789_val, NRF_LOG_FLOAT(voltage));
+#endif
+        }
 
         NRF_LOG_FLUSH();
-        //nrf_delay_ms(10);
     }
 }

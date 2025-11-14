@@ -43,9 +43,7 @@
       project_type="Executable" />
     <folder Name="Application">
       <file file_name="../../../main.c">
-        <configuration
-          Name="Debug"
-          c_preprocessor_definitions="CONFIG_NFCT_PINS_AS_GPIOS" />
+        <configuration Name="Debug" c_preprocessor_definitions="" />
       </file>
       <file file_name="../../../meas.c" />
       <file file_name="../config/sdk_config.h" />
@@ -59,7 +57,11 @@
     <folder Name="None">
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf52.s" />
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf_common.s" />
-      <file file_name="../../../../../../modules/nrfx/mdk/system_nrf52.c" />
+      <file file_name="../../../../../../modules/nrfx/mdk/system_nrf52.c">
+        <configuration
+          Name="Debug"
+          c_preprocessor_definitions_c_only="CONFIG_NFCT_PINS_AS_GPIOS" />
+      </file>
     </folder>
     <folder Name="nRF_Drivers">
       <file file_name="../../../../../../integration/nrfx/legacy/nrf_drv_spi.c" />
