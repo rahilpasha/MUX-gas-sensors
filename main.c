@@ -39,7 +39,6 @@
  */
 
 #include <string.h>
-#include <math.h>
 
 #include "nrf_drv_spi.h"
 #include "app_util_platform.h"
@@ -50,12 +49,7 @@
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
-
-// SAADC includes
-#include "nrf.h"
-#include "nrf_drv_saadc.h"
-#include "nrf_drv_ppi.h"
-#include "nrf_drv_timer.h"
+#include "app_timer.h"
 
 // PIN Definitions
 // MUX Control Pins
@@ -82,6 +76,52 @@ static volatile bool spi_xfer_done;
 static uint8_t m_tx_dac_use_internal_ref[] = {0b00111000, 0b00000000, 0b00000001};
 static uint8_t m_tx_dac_set_500mV[] = {0b00011000, 0b00010011, 0b01100101};
 static const uint8_t m_length_dac = 3;
+
+// Data struct
+
+#define MAX_READINGS_PER_CHANNEL 100
+
+typedef struct {
+    uint32_t timestamp_ms;
+    uint32_t adc_val;
+    bool error_flag;
+} ADC_Reading;
+
+typedef struct {
+    ADC_Reading readings[MAX_READINGS_PER_CHANNEL];
+    uint16_t count;
+} Channel_Data;
+
+Channel_Data ADC_DATA[16];
+
+// Timer for timestamps
+APP_TIMER_DEF(m_timestamp_timer);
+static volatile uint32_t m_timestamp_ms = 0;
+
+/**
+ * @brief Timer handler to increment timestamp
+ */
+static void timestamp_timer_handler(void * p_context)
+{
+    m_timestamp_ms++;
+}
+
+
+void timer_init(void)
+{
+    APP_ERROR_CHECK(app_timer_init());
+    
+    // Create timer that fires every 1ms for timestamp
+    APP_ERROR_CHECK(app_timer_create(&m_timestamp_timer,
+                                    APP_TIMER_MODE_REPEATED,
+                                    timestamp_timer_handler));
+    
+    // Start timer (1ms intervals)
+    APP_ERROR_CHECK(app_timer_start(m_timestamp_timer, 
+                                    APP_TIMER_TICKS(1), 
+                                    NULL));
+}
+
 
 /**
  * @brief SPI user event handler.
@@ -112,6 +152,7 @@ void ad7789_reset()
 
     nrf_gpio_pin_set(ADC_CS_PIN);
     nrf_delay_ms(10);
+    m_timestamp_ms += 10;
     NRF_LOG_INFO("AD7789 Reset.");
 }
 
@@ -178,6 +219,7 @@ bool ad7789_wait_for_data(uint32_t timeout_ms)
         }
         
         nrf_delay_ms(10);
+        m_timestamp_ms += 10;
         elapsed += 10;
         
         if (elapsed >= timeout_ms) {
@@ -213,6 +255,7 @@ void ad7789_select_channel(uint8_t channel)
     
     nrf_gpio_pin_set(ADC_CS_PIN);
     nrf_delay_ms(150); // Wait for first conversion
+    m_timestamp_ms += 150;
     
     NRF_LOG_INFO("Selected channel 0x%02X", channel);
 }
@@ -271,9 +314,9 @@ void ad7789_configure_analog_input()
 double ad7789_convert_voltage(uint32_t adc_value) 
 {
     // Bipolar mode: Code = 2^23 × ((VIN / VREF) + 1)
-    // Therefore: VIN = ((Code / 2^23) - 1) × VREF
+    // VIN = ((Code / 2^23) - 1) × VREF
     double normalized = (double)adc_value / 8388608.0; // 2^23
-    return (normalized - 1.0) * 2.719; // VREF ≈ 2.719V
+    return (normalized - 1.0) * 2.719; // VREF = 2.719V
 }
 
 //================================================================================
@@ -313,6 +356,9 @@ int main(void)
 {
     bsp_board_init(BSP_INIT_LEDS);
     log_init();
+    timer_init();
+
+
     NRF_LOG_INFO("Application Started.");
 
     // --- SPI Configuration ---
@@ -358,68 +404,51 @@ int main(void)
     ad7789_reset();
     
     uint8_t status = ad7789_read_status();
-    NRF_LOG_INFO("Initial status: 0x%02X (should be 0x8C for AD7789)", status);
+    NRF_LOG_INFO("Initial status: 0x%02X (should be 0x8C)", status);
     
     // Configure for normal operation on analog input channel
     ad7789_configure_analog_input();
     
     NRF_LOG_INFO("\n=== Starting Main Loop ===\n");
     
-    bool beta[] = {false, false, false, false};
+    uint8_t channel = 15;
 
     while (1)
     {
         bsp_board_led_invert(BSP_BOARD_LED_0);
       
-#ifndef MUX_DISABLE
         // Increment MUX channel
-        int carry = 1;
-        for (int i = 3; i >= 0; i--) {
-            int sum = beta[i] + carry;
-            beta[i] = sum % 2;
-            carry = sum / 2;
+        channel++;
+        if (channel > 15) {
+            channel = 0;
         }
 
-        nrf_gpio_pin_write(A3, beta[0]);
-        nrf_gpio_pin_write(A2, beta[1]);
-        nrf_gpio_pin_write(A1, beta[2]);
-        nrf_gpio_pin_write(A0, beta[3]);
+        nrf_gpio_pin_write(A3, (channel >> 3) & 1);
+        nrf_gpio_pin_write(A2, (channel >> 2) & 1);
+        nrf_gpio_pin_write(A1, (channel >> 1) & 1);
+        nrf_gpio_pin_write(A0, (channel >> 0) & 1);
         nrf_gpio_pin_write(EN, 1);
-
-        char beta_str[5];
-        for (int i = 0; i < 4; i++) {
-            beta_str[i] = beta[i] ? '1' : '0';
-        }
-        beta_str[4] = '\0';
-#endif
         
-        // Longer delay for MUX to settle and input to stabilize
+        // Delay for MUX to settle and input to stabilize
         nrf_delay_ms(500);
+        m_timestamp_ms += 500;
 
         // Read from AD7789
         uint32_t ad7789_val = ad7789_read_data();
         uint8_t final_status = ad7789_read_status();
-        
-        if (final_status & 0x40) {
-            // Error flag set
-#ifndef MUX_DISABLE
-            NRF_LOG_WARNING("%s, ERROR: %lu (0x%06X)", 
-                          (uint32_t)beta_str, ad7789_val, ad7789_val);
-#else
-            NRF_LOG_WARNING("ERROR: %lu (0x%06X)", ad7789_val, ad7789_val);
-#endif
-        } else {
-            // Valid reading
-            double voltage = ad7789_convert_voltage(ad7789_val);
-#ifndef MUX_DISABLE
-            NRF_LOG_INFO("%s, %lu (0x%06X), " NRF_LOG_FLOAT_MARKER " V", 
-                        (uint32_t)beta_str, ad7789_val, ad7789_val, 
-                        NRF_LOG_FLOAT(voltage));
-#else
-            NRF_LOG_INFO("%lu (0x%06X), " NRF_LOG_FLOAT_MARKER " V", 
-                        ad7789_val, ad7789_val, NRF_LOG_FLOAT(voltage));
-#endif
+
+        // Add reading to struct
+        ADC_Reading data = {m_timestamp_ms, ad7789_val, (final_status & 0x40)};
+
+        uint16_t count = ADC_DATA[channel].count;
+
+        if (count >= MAX_READINGS_PER_CHANNEL) {
+            count = 0;
+            
         }
+
+        ADC_DATA[channel].readings[count] = data;
+        ADC_DATA[channel].count++;
 
         NRF_LOG_FLUSH();
     }

@@ -5,8 +5,6 @@ Output/Debug/Obj/spi_pca10040/main.o: \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL_ConfDefaults.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL_Conf.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL_Arm_Conf.h \
- /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/math.h \
- /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL_FP.h \
  ../../../../../../integration/nrfx/legacy/nrf_drv_spi.h \
  ../../../../../../modules/nrfx/nrfx.h \
  ../../../../../../integration/nrfx/nrfx_config.h ../config/sdk_config.h \
@@ -77,12 +75,5 @@ Output/Debug/Obj/spi_pca10040/main.o: \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/stdlib.h \
  ../../../../../../components/libraries/balloc/nrf_balloc.h \
  ../../../../../../components/libraries/log/nrf_log_default_backends.h \
- ../../../../../../integration/nrfx/legacy/nrf_drv_saadc.h \
- ../../../../../../modules/nrfx/drivers/include/nrfx_saadc.h \
- ../../../../../../modules/nrfx/hal/nrf_saadc.h \
- ../../../../../../integration/nrfx/legacy/nrf_drv_ppi.h \
- ../../../../../../modules/nrfx/drivers/include/nrfx_ppi.h \
- ../../../../../../modules/nrfx/hal/nrf_ppi.h \
- ../../../../../../integration/nrfx/legacy/nrf_drv_timer.h \
- ../../../../../../modules/nrfx/drivers/include/nrfx_timer.h \
- ../../../../../../modules/nrfx/hal/nrf_timer.h
+ ../../../../../../components/libraries/timer/app_timer.h \
+ ../../../../../../components/libraries/sortlist/nrf_sortlist.h
