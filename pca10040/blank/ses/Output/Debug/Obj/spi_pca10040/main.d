@@ -1,5 +1,5 @@
 Output/Debug/Obj/spi_pca10040/main.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/examples/peripheral/spi/main.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/examples/peripheral/spi/main.c \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/string.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL_ConfDefaults.h \

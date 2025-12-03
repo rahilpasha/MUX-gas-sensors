@@ -1,5 +1,5 @@
 Output/Debug/Obj/spi_pca10040/nrf_log_backend_uart.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/log/src/nrf_log_backend_uart.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/log/src/nrf_log_backend_uart.c \
  ../../../../../../components/libraries/util/sdk_common.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/stdint.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL.h \

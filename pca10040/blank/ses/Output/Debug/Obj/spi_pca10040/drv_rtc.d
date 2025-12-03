@@ -1,5 +1,5 @@
 Output/Debug/Obj/spi_pca10040/drv_rtc.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/timer/drv_rtc.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/timer/drv_rtc.c \
  ../../../../../../modules/nrfx/nrfx.h \
  ../../../../../../integration/nrfx/nrfx_config.h ../config/sdk_config.h \
  ../../../../../../modules/nrfx/drivers/nrfx_common.h \

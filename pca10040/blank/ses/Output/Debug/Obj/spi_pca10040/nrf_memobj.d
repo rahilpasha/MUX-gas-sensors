@@ -1,6 +1,6 @@
 Output/Debug/Obj/spi_pca10040/nrf_memobj.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/memobj/nrf_memobj.c \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/memobj/nrf_memobj.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/memobj/nrf_memobj.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/memobj/nrf_memobj.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/stdint.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL_ConfDefaults.h \

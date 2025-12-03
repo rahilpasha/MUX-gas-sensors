@@ -1,6 +1,6 @@
 Output/Debug/Obj/spi_pca10040/nrf_atomic.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/atomic/nrf_atomic.c \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/atomic/nrf_atomic.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/atomic/nrf_atomic.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/atomic/nrf_atomic.h \
  ../../../../../../components/libraries/util/sdk_common.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/stdint.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL.h \
@@ -31,4 +31,4 @@ Output/Debug/Obj/spi_pca10040/nrf_atomic.o: \
  ../../../../../../modules/nrfx/mdk/compiler_abstraction.h \
  ../../../../../../components/libraries/util/sdk_macros.h \
  ../../../../../../components/libraries/util/nrf_assert.h \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/atomic/nrf_atomic_internal.h
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/atomic/nrf_atomic_internal.h

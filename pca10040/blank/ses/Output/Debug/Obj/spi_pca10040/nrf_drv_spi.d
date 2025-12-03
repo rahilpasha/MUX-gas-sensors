@@ -1,6 +1,6 @@
 Output/Debug/Obj/spi_pca10040/nrf_drv_spi.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/integration/nrfx/legacy/nrf_drv_spi.c \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/integration/nrfx/legacy/nrf_drv_spi.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/integration/nrfx/legacy/nrf_drv_spi.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/integration/nrfx/legacy/nrf_drv_spi.h \
  ../../../../../../modules/nrfx/nrfx.h \
  ../../../../../../integration/nrfx/nrfx_config.h ../config/sdk_config.h \
  ../../../../../../modules/nrfx/drivers/nrfx_common.h \

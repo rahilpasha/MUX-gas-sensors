@@ -1,5 +1,5 @@
 Output/Debug/Obj/spi_pca10040/nrf_atfifo.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/atomic_fifo/nrf_atfifo.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/atomic_fifo/nrf_atfifo.c \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/string.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL_ConfDefaults.h \
@@ -23,7 +23,7 @@ Output/Debug/Obj/spi_pca10040/nrf_atfifo.o: \
  ../../../../../../modules/nrfx/mdk/nrf51_to_nrf52.h \
  ../../../../../../modules/nrfx/mdk/nrf52_name_change.h \
  ../../../../../../modules/nrfx/mdk/compiler_abstraction.h \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/atomic_fifo/nrf_atfifo.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/atomic_fifo/nrf_atfifo.h \
  ../config/sdk_config.h \
  ../../../../../../components/libraries/util/nordic_common.h \
  ../../../../../../components/libraries/util/nrf_assert.h \
@@ -32,7 +32,7 @@ Output/Debug/Obj/spi_pca10040/nrf_atfifo.o: \
  ../../../../../../components/libraries/log/nrf_log_instance.h \
  ../../../../../../components/libraries/experimental_section_vars/nrf_section.h \
  ../../../../../../components/libraries/log/nrf_log_types.h \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/components/libraries/atomic_fifo/nrf_atfifo_internal.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/components/libraries/atomic_fifo/nrf_atfifo_internal.h \
  ../../../../../../components/libraries/log/nrf_log.h \
  ../../../../../../components/libraries/util/sdk_common.h \
  ../../../../../../components/libraries/util/sdk_os.h \

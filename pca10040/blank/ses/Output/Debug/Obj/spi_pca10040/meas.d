@@ -1,5 +1,5 @@
 Output/Debug/Obj/spi_pca10040/meas.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/examples/peripheral/spi/meas.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/examples/peripheral/spi/meas.c \
  ../../../../../../integration/nrfx/legacy/nrf_drv_spi.h \
  ../../../../../../modules/nrfx/nrfx.h \
  ../../../../../../integration/nrfx/nrfx_config.h ../config/sdk_config.h \
@@ -84,4 +84,4 @@ Output/Debug/Obj/spi_pca10040/meas.o: \
  ../../../../../../integration/nrfx/legacy/nrf_drv_timer.h \
  ../../../../../../modules/nrfx/drivers/include/nrfx_timer.h \
  ../../../../../../modules/nrfx/hal/nrf_timer.h \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/examples/peripheral/spi/meas.h
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/examples/peripheral/spi/meas.h

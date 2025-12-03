@@ -40,8 +40,6 @@
 
 //custom edits
 
-#define CONFIG_NFCT_PINS_AS_GPIOS 1 // for NFC_0.10 pin to work as a GPIO output
-
 #define NRF_LOG_BACKEND_RTT_ENABLED 1
 #define NRF_LOG_BACKEND_UART_ENABLED 0
 #define NRFX_SPI0_ENABLED 1
@@ -75,6 +73,15 @@
 
 #ifndef SDK_CONFIG_H
 #define SDK_CONFIG_H
+
+#define CONFIG_NFCT_PINS_AS_GPIOS 1 // Enable GPIO output for P0.10 - an NFC pin by default
+
+#define NRF_LOG_USES_TIMESTAMP 1
+#define NRF_LOG_TIMESTAMP_DEFAULT_FREQUENCY 0
+#define NRFX_RTC_CONFIG_LOG_ENABLED 1
+#define APP_TIMER_KEEPS_RTC_ACTIVE 1
+
+
 // <<< Use Configuration Wizard in Context Menu >>>\n
 #ifdef USE_APP_CONFIG
 #include "app_config.h"

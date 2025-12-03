@@ -25,13 +25,15 @@
   <ProjectSessionItem path="spi_pca10040;spi_pca10040"/>
   <ProjectSessionItem path="spi_pca10040;spi_pca10040;Application"/>
   <ProjectSessionItem path="spi_pca10040;spi_pca10040;Board Definition"/>
+  <ProjectSessionItem path="spi_pca10040;spi_pca10040;Board Support"/>
   <ProjectSessionItem path="spi_pca10040;spi_pca10040;None"/>
   <ProjectSessionItem path="spi_pca10040;spi_pca10040;nRF_Drivers"/>
   <ProjectSessionItem path="spi_pca10040;spi_pca10040;nRF_Libraries"/>
+  <ProjectSessionItem path="spi_pca10040;spi_pca10040;nRF_Log"/>
   <ProjectSessionItem path="spi_pca10040;spi_pca10040;nRF_Segger_RTT"/>
  </Project>
  <Register1>
-  <RegisterWindow invisibleNodes="" visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/MSP;CPU/PSP;CPU/PRIMASK;CPU/BASEPRI;CPU/FAULTMASK;CPU/CONTROL;CPU/internal;P0/OUT;P0/OUTSET;P0/OUTCLR;P0/IN;P0/DIR;P0/DIRSET;P0/DIRCLR;P0/LATCH;P0/DETECTMODE;P0/PIN_CNF[0];P0/PIN_CNF[1];P0/PIN_CNF[2];P0/PIN_CNF[3];P0/PIN_CNF[4];P0/PIN_CNF[5];P0/PIN_CNF[6];P0/PIN_CNF[7];P0/PIN_CNF[8];P0/PIN_CNF[9];P0/PIN_CNF[10];P0/PIN_CNF[11];P0/PIN_CNF[12];P0/PIN_CNF[13];P0/PIN_CNF[14];P0/PIN_CNF[15];P0/PIN_CNF[16];P0/PIN_CNF[17];P0/PIN_CNF[18];P0/PIN_CNF[19];P0/PIN_CNF[20];P0/PIN_CNF[21];P0/PIN_CNF[22];P0/PIN_CNF[23];P0/PIN_CNF[24];P0/PIN_CNF[25];P0/PIN_CNF[26];P0/PIN_CNF[27];P0/PIN_CNF[28];P0/PIN_CNF[29];P0/PIN_CNF[30];P0/PIN_CNF[31];UICR/NFCPINS" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context;P0;UICR;UICR/NFCPINS" name="spi_pca10040_Debug" decimalNodes="" octalNodes="" unsignedNodes=""/>
+  <RegisterWindow invisibleNodes="" visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/MSP;CPU/PSP;CPU/PRIMASK;CPU/BASEPRI;CPU/FAULTMASK;CPU/CONTROL;CPU/internal" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="spi_pca10040_Debug" decimalNodes="" octalNodes="" unsignedNodes=""/>
  </Register1>
  <Register2>
   <RegisterWindow invisibleNodes="" visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/MSP;CPU/PSP;CPU/PRIMASK;CPU/BASEPRI;CPU/FAULTMASK;CPU/CONTROL;CPU/internal" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="spi_pca10040_Debug" decimalNodes="" octalNodes="" unsignedNodes=""/>
@@ -61,9 +63,11 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="13" y="63" useTextEdit="1" folds0="563" path="../../../main.c" left="0" selected="1" top="44" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="2" y="37" useTextEdit="1" path="../config/sdk_config.h" left="0" top="21" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="183" useTextEdit="1" path="../../../../../../modules/nrfx/mdk/system_nrf52.c" left="0" top="148" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="18" y="53" useTextEdit="1" folds0="509" path="../../../main.c" left="0" selected="1" top="23" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="26" y="4440" useTextEdit="1" path="../config/sdk_config.h" left="0" top="4324" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="8" y="80" useTextEdit="1" path="../../../../../../components/libraries/log/nrf_log_ctrl.h" left="0" top="60" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="71" useTextEdit="1" path="../../../../../../modules/nrfx/mdk/ses_startup_nrf52.s" left="0" top="71" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="16" y="6" useTextEdit="1" path="spi_pca10040.emProject" left="0" top="0" codecName="Default"/>
  </Files>
  <EMStudioWindow activeProject="spi_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/Users/yogakanneboina/Downloads/combined_nRF5_SDK_17.0.2_d674dde/examples/peripheral/spi" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

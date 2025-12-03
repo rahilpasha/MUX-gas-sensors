@@ -1,5 +1,5 @@
 Output/Debug/Obj/spi_pca10040/nrf_fprintf_format.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/external/fprintf/nrf_fprintf_format.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/external/fprintf/nrf_fprintf_format.c \
  ../../../../../../components/libraries/util/sdk_common.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/stdint.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/__SEGGER_RTL.h \
@@ -32,5 +32,5 @@ Output/Debug/Obj/spi_pca10040/nrf_fprintf_format.o: \
  ../../../../../../components/libraries/util/nrf_assert.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/stdarg.h \
  ../../../../../../components/libraries/util/nrf_assert.h \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/external/fprintf/nrf_fprintf.h \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/external/fprintf/nrf_fprintf_format.h
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/external/fprintf/nrf_fprintf.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/external/fprintf/nrf_fprintf_format.h

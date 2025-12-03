@@ -1,7 +1,7 @@
 Output/Debug/Obj/spi_pca10040/SEGGER_RTT.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/external/segger_rtt/SEGGER_RTT.c \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/external/segger_rtt/SEGGER_RTT.h \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/external/segger_rtt/SEGGER_RTT_Conf.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/external/segger_rtt/SEGGER_RTT.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/external/segger_rtt/SEGGER_RTT.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/external/segger_rtt/SEGGER_RTT_Conf.h \
  ../../../../../../components/libraries/util/nordic_common.h \
  ../../../../../../components/libraries/util/app_util_platform.h \
  /Applications/SEGGER/SEGGER\ Embedded\ Studio\ 8.24/include/stdint.h \

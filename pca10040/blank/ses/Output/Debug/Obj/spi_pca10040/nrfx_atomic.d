@@ -1,6 +1,6 @@
 Output/Debug/Obj/spi_pca10040/nrfx_atomic.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/modules/nrfx/soc/nrfx_atomic.c \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/modules/nrfx/soc/nrfx_atomic.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/modules/nrfx/soc/nrfx_atomic.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/modules/nrfx/soc/nrfx_atomic.h \
  ../../../../../../modules/nrfx/nrfx.h \
  ../../../../../../integration/nrfx/nrfx_config.h ../config/sdk_config.h \
  ../../../../../../modules/nrfx/drivers/nrfx_common.h \
@@ -47,4 +47,4 @@ Output/Debug/Obj/spi_pca10040/nrfx_atomic.o: \
  ../../../../../../components/libraries/util/sdk_resources.h \
  ../../../../../../modules/nrfx/drivers/nrfx_errors.h \
  ../../../../../../modules/nrfx/drivers/src/prs/nrfx_prs.h \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/modules/nrfx/soc/nrfx_atomic_internal.h
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/modules/nrfx/soc/nrfx_atomic_internal.h

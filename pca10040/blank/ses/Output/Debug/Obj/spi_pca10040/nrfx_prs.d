@@ -1,5 +1,5 @@
 Output/Debug/Obj/spi_pca10040/nrfx_prs.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/modules/nrfx/drivers/src/prs/nrfx_prs.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/modules/nrfx/drivers/src/prs/nrfx_prs.c \
  ../../../../../../modules/nrfx/nrfx.h \
  ../../../../../../integration/nrfx/nrfx_config.h ../config/sdk_config.h \
  ../../../../../../modules/nrfx/drivers/nrfx_common.h \
@@ -46,7 +46,7 @@ Output/Debug/Obj/spi_pca10040/nrfx_prs.o: \
  ../../../../../../components/libraries/util/sdk_resources.h \
  ../../../../../../modules/nrfx/drivers/nrfx_errors.h \
  ../../../../../../modules/nrfx/drivers/src/prs/nrfx_prs.h \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/modules/nrfx/drivers/src/prs/nrfx_prs.h \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/modules/nrfx/drivers/src/prs/nrfx_prs.h \
  ../../../../../../integration/nrfx/nrfx_log.h \
  ../../../../../../components/libraries/log/nrf_log.h \
  ../../../../../../components/libraries/util/sdk_common.h \

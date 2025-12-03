@@ -41,7 +41,6 @@
 #include <string.h>
 
 #include "nrf_drv_spi.h"
-#include "app_util_platform.h"
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
 #include "boards.h"
@@ -51,20 +50,33 @@
 #include "nrf_log_default_backends.h"
 #include "app_timer.h"
 
+#define BREADBOARD 0 // 0 if using PCB, 1 if using breadboard
+
 // PIN Definitions
+
 // MUX Control Pins
+#if !BREADBOARD
 #define A0 20
+#endif
+#if BREADBOARD
+#define A0 18
+#endif
+
 #define A1 3
 #define A2 10
 #define A3 5
 #define EN 8
 
-// SPI Peripherals Chip Select (/CS) Pins
+// SPI Pins
 #define DAC_CS_PIN 6      // Chip select for DAC
 #define ADC_CS_PIN 4      // Chip select for AD7789
 
-// SPI bus pins
+#if !BREADBOARD
 #define MOSI_PIN 0
+#endif
+#if BREADBOARD
+#define MOSI_PIN 11
+#endif
 #define MISO_PIN 28
 #define SCK_PIN 7
 
@@ -73,12 +85,19 @@ static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);
 static volatile bool spi_xfer_done;
 
 // DAC Data Buffer
+#if !BREADBOARD
 static uint8_t m_tx_dac_use_internal_ref[] = {0b00111000, 0b00000000, 0b00000001};
 static uint8_t m_tx_dac_set_500mV[] = {0b00011000, 0b00010011, 0b01100101};
+#endif
+
+#if BREADBOARD
+static uint8_t m_tx_breadboard_dac[] = {0b00000000, 0b00011001, 0b10011010};;
+#endif
+
 static const uint8_t m_length_dac = 3;
 
-// Data struct
 
+// Data struct
 #define MAX_READINGS_PER_CHANNEL 100
 
 typedef struct {
@@ -94,33 +113,22 @@ typedef struct {
 
 Channel_Data ADC_DATA[16];
 
+void print_data(void) {
+    for (int i = 0; i < 15; i++) {
+      for (int count = 0; count < ADC_DATA[i].count; i++) {
+          NRF_LOG_INFO("%d, %lu", i, ADC_DATA[i].readings[count].adc_val);
+      }
+    }
+}
+
+
 // Timer for timestamps
-APP_TIMER_DEF(m_timestamp_timer);
 static volatile uint32_t m_timestamp_ms = 0;
 
-/**
- * @brief Timer handler to increment timestamp
- */
-static void timestamp_timer_handler(void * p_context)
-{
-    m_timestamp_ms++;
-}
-
-
-void timer_init(void)
-{
-    APP_ERROR_CHECK(app_timer_init());
-    
-    // Create timer that fires every 1ms for timestamp
-    APP_ERROR_CHECK(app_timer_create(&m_timestamp_timer,
-                                    APP_TIMER_MODE_REPEATED,
-                                    timestamp_timer_handler));
-    
-    // Start timer (1ms intervals)
-    APP_ERROR_CHECK(app_timer_start(m_timestamp_timer, 
-                                    APP_TIMER_TICKS(1), 
-                                    NULL));
-}
+//uint32_t get_rtc_counter(void)
+//{
+//    return NRF_RTC1->COUNTER;
+//}
 
 
 /**
@@ -347,7 +355,11 @@ void send_DAC_msg(uint8_t *p_tx_data, uint8_t length)
 //================================================================================
 
 void log_init(void)
-{
+{    
+    //NRF_RTC1->TASKS_START = 1;
+
+    //app_timer_init();
+
     APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
     NRF_LOG_DEFAULT_BACKENDS_INIT();
 }
@@ -356,8 +368,6 @@ int main(void)
 {
     bsp_board_init(BSP_INIT_LEDS);
     log_init();
-    timer_init();
-
 
     NRF_LOG_INFO("Application Started.");
 
@@ -387,8 +397,14 @@ int main(void)
     NRF_LOG_INFO("GPIO Initialized.");
 
     // Set initial DAC output
+    #if !BREADBOARD
     send_DAC_msg(m_tx_dac_use_internal_ref, m_length_dac);
     send_DAC_msg(m_tx_dac_set_500mV, m_length_dac);
+    #endif
+
+    #if BREADBOARD
+    send_DAC_msg(m_tx_breadboard_dac, m_length_dac);
+    #endif
 
     NRF_LOG_INFO("DAC output set to 0.5V");
 
@@ -430,8 +446,8 @@ int main(void)
         nrf_gpio_pin_write(EN, 1);
         
         // Delay for MUX to settle and input to stabilize
-        nrf_delay_ms(500);
-        m_timestamp_ms += 500;
+        nrf_delay_ms(250);
+        m_timestamp_ms += 250;
 
         // Read from AD7789
         uint32_t ad7789_val = ad7789_read_data();
@@ -449,6 +465,8 @@ int main(void)
 
         ADC_DATA[channel].readings[count] = data;
         ADC_DATA[channel].count++;
+
+        NRF_LOG_INFO("%lu, %u, %lu", m_timestamp_ms, channel, ad7789_val)
 
         NRF_LOG_FLUSH();
     }

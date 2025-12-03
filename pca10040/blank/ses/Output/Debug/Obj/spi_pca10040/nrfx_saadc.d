@@ -1,5 +1,5 @@
 Output/Debug/Obj/spi_pca10040/nrfx_saadc.o: \
- /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde/modules/nrfx/drivers/src/nrfx_saadc.c \
+ /Users/rahilpasha/Desktop/combined_nRF5_SDK_17.0.2_d674dde\ 2/modules/nrfx/drivers/src/nrfx_saadc.c \
  ../../../../../../modules/nrfx/nrfx.h \
  ../../../../../../integration/nrfx/nrfx_config.h ../config/sdk_config.h \
  ../../../../../../modules/nrfx/drivers/nrfx_common.h \
